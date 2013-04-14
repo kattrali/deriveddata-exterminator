@@ -37,6 +37,12 @@ Sometimes Xcode needs a friendly helping hand with cleaning out the Derived Data
 - Moonwalk (optional, but recommended)
 - Get back to building cool stuff
 
+### Additional Options
+
+Clearing derived data (for the current project/workspace or all projects) is also available from the `View` menu
+
+![Exterminator Menu Options](https://github.com/kattrali/deriveddata-exterminator/raw/master/docs/menu.png)
+
 ## References
 
 - [Creating an Xcode4 Plugin](http://www.blackdogfoundry.com/blog/creating-an-xcode4-plugin/) : Plugin structure and project configuration tutorial
