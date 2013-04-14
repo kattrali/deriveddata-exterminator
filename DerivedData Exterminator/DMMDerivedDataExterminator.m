@@ -26,6 +26,7 @@
 @interface DMMDerivedDataExterminator()
 
 - (DMMExterminatorButtonView *) exterminatorButtonContainerForWindow: (NSWindow *) window;
+- (void) showErrorAlert:(NSError *) error forPath: (NSString *) path;
 - (void) updateTitleBarsFromPreferences;
 @end
 
@@ -114,7 +115,11 @@
         if ([subdirectory hasPrefix:projectPrefix]) {
             NSString *removablePath = [derivedDataPath stringByAppendingPathComponent:subdirectory];
             [manager removeItemAtPath:removablePath error:&error];
-            if (error) NSLog(@"Sad Panda: %@", [error description]);
+            if (error) {
+                NSLog(@"Failed to remove Derived Data: %@", [error description]);
+                [self showErrorAlert:error forPath:removablePath];
+                break;
+            }
         }
     }
 }
@@ -131,11 +136,22 @@
     for (NSString *subdirectory in directories) {
         NSString *removablePath = [derivedDataPath stringByAppendingPathComponent:subdirectory];
         [manager removeItemAtPath:removablePath error:&error];
-        if (error) NSLog(@"Sad Panda: %@", [error description]);
+        if (error) {
+            NSLog(@"Failed to remove all Derived Data: %@", [error description]);
+            [self showErrorAlert:error forPath:removablePath];
+            break;
+        }
     }
 }
 
 #pragma mark - GUI Management
+
+- (void) showErrorAlert:(NSError *) error forPath: (NSString *) path
+{
+    NSString *message = [NSString stringWithFormat:@"An error occurred while removing %@:\n\n %@", path, [error localizedDescription]];
+    NSAlert *alert    = [NSAlert alertWithMessageText:message defaultButton:nil alternateButton:nil otherButton:nil informativeTextWithFormat:@""];
+    [alert runModal];
+}
 
 - (void) toggleButtonInTitleBar:(id)sender
 {
