@@ -20,7 +20,7 @@
 #define kDMMDerivedDataExterminatorShowButtonInTitleBar	@"DMMDerivedDataExterminatorShowButtonInTitleBar"
 
 @interface NSObject (IDEKit)
-+ (id)workspaceWindowControllers;
++ (id) workspaceWindowControllers;
 @end
 
 @interface DMMDerivedDataExterminator()
@@ -35,45 +35,45 @@
 
 + (void)pluginDidLoad:(NSBundle *)plugin
 {
-	static id sharedPlugin = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		sharedPlugin = [[self alloc] init];
-	});
+    static id sharedPlugin = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedPlugin = [[self alloc] init];
+    });
 }
 
 - (id)init
 {
-	if (self = [super init]) {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidEndLiveResize:) name:NSWindowDidEndLiveResizeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTitleBarsFromPreferences) name:NSWindowDidBecomeKeyNotification object:nil];
-        
-    NSMenuItem *viewMenuItem = [[NSApp mainMenu] itemWithTitle:@"View"];
-    if (viewMenuItem) {
-        [[viewMenuItem submenu] addItem:[NSMenuItem separatorItem]];
+    if (self = [super init]) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidEndLiveResize:) name:NSWindowDidEndLiveResizeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTitleBarsFromPreferences) name:NSWindowDidBecomeKeyNotification object:nil];
 
-        NSMenuItem *clearItem = [[[NSMenuItem alloc] initWithTitle:@"Clear Derived Data for Project" action:@selector(clearDerivedDataForKeyWindow) keyEquivalent:@"h"] autorelease];
-        [clearItem setKeyEquivalentModifierMask: NSShiftKeyMask | NSCommandKeyMask];
-        [clearItem setTarget:self];
-        [[viewMenuItem submenu] addItem:clearItem];
-        
-        NSMenuItem *clearAllItem = [[[NSMenuItem alloc] initWithTitle:@"Clear All Derived Data" action:@selector(clearAllDerivedData) keyEquivalent:@""] autorelease];
-        [clearAllItem setTarget:self];
-        [[viewMenuItem submenu] addItem:clearAllItem];
-        
-        NSMenuItem *toggleButtonInTitleBarItem = [[[NSMenuItem alloc] initWithTitle:@"Derived Data Exterminator in Title Bar" action:@selector(toggleButtonInTitleBar:) keyEquivalent:@""] autorelease];
-        [toggleButtonInTitleBarItem setTarget:self];
-        [[viewMenuItem submenu] addItem:toggleButtonInTitleBarItem];
+        NSMenuItem *viewMenuItem = [[NSApp mainMenu] itemWithTitle:@"View"];
+        if (viewMenuItem) {
+            [[viewMenuItem submenu] addItem:[NSMenuItem separatorItem]];
+
+            NSMenuItem *clearItem = [[[NSMenuItem alloc] initWithTitle:@"Clear Derived Data for Project" action:@selector(clearDerivedDataForKeyWindow) keyEquivalent:@"h"] autorelease];
+            [clearItem setKeyEquivalentModifierMask: NSShiftKeyMask | NSCommandKeyMask];
+            [clearItem setTarget:self];
+            [[viewMenuItem submenu] addItem:clearItem];
+
+            NSMenuItem *clearAllItem = [[[NSMenuItem alloc] initWithTitle:@"Clear All Derived Data" action:@selector(clearAllDerivedData) keyEquivalent:@""] autorelease];
+            [clearAllItem setTarget:self];
+            [[viewMenuItem submenu] addItem:clearAllItem];
+
+            NSMenuItem *toggleButtonInTitleBarItem = [[[NSMenuItem alloc] initWithTitle:@"Derived Data Exterminator in Title Bar" action:@selector(toggleButtonInTitleBar:) keyEquivalent:@""] autorelease];
+            [toggleButtonInTitleBarItem setTarget:self];
+            [[viewMenuItem submenu] addItem:toggleButtonInTitleBarItem];
+        }
+
     }
-    
-  }
-  return self;
+    return self;
 }
 
 - (void)dealloc
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[super dealloc];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [super dealloc];
 }
 
 #pragma mark - DerivedData Management
@@ -87,7 +87,7 @@
             id workspace = [controller valueForKey:@"_workspace"];
             id filePath  = [workspace valueForKey:@"filePath"];
             NSString *path = (NSString *)[filePath valueForKey:@"pathString"];
-            
+
             for (NSString *component in [path componentsSeparatedByString:@"/"]) {
                 NSUInteger location = [component rangeOfString:@".xc"].location;
                 if (location != NSNotFound) {
@@ -110,7 +110,7 @@
     NSError *error = nil;
     NSArray *directories = [manager contentsOfDirectoryAtPath:derivedDataPath error:&error];
     if (error) return;
-    
+
     for (NSString *subdirectory in directories) {
         if ([subdirectory hasPrefix:projectPrefix]) {
             NSString *removablePath = [derivedDataPath stringByAppendingPathComponent:subdirectory];
@@ -156,69 +156,68 @@
 - (void) toggleButtonInTitleBar:(id)sender
 {
     [self setButtonEnabled:![self isButtonEnabled]];
-	[self updateTitleBarsFromPreferences];
+    [self updateTitleBarsFromPreferences];
 }
 
 - (void) updateTitleBarsFromPreferences
 {
     @try {
-		NSArray *workspaceWindowControllers = [NSClassFromString(@"IDEWorkspaceWindowController") workspaceWindowControllers];
-		for (NSWindow *window in [workspaceWindowControllers valueForKey:@"window"]) {
+        NSArray *workspaceWindowControllers = [NSClassFromString(@"IDEWorkspaceWindowController") workspaceWindowControllers];
+        for (NSWindow *window in [workspaceWindowControllers valueForKey:@"window"]) {
             DMMExterminatorButtonView *buttonView = [self exterminatorButtonContainerForWindow:window];
-			if (buttonView) [buttonView setHidden:![self isButtonEnabled]];
-		}
-	}
-	@catch (NSException *exception) { }
+            if (buttonView) [buttonView setHidden:![self isButtonEnabled]];
+        }
+    }
+    @catch (NSException *exception) { }
 }
 
 - (BOOL) validateMenuItem:(NSMenuItem *)menuItem
 {
-	if ([menuItem action] == @selector(toggleButtonInTitleBar:)) {
-		[menuItem setState:[self isButtonEnabled] ? NSOnState : NSOffState];
-	}
-	return YES;
+    if ([menuItem action] == @selector(toggleButtonInTitleBar:)) {
+        [menuItem setState:[self isButtonEnabled] ? NSOnState : NSOffState];
+    }
+    return YES;
 }
 
 - (NSButton *) exterminatorButtonForWindow: (NSWindow *) window
 {
     DMMExterminatorButtonView *container = [self exterminatorButtonContainerForWindow:window];
-	return container.button;
+    return container.button;
 }
 
 - (DMMExterminatorButtonView *) exterminatorButtonContainerForWindow: (NSWindow *) window {
     if ([window isKindOfClass:NSClassFromString(@"IDEWorkspaceWindow")]) {
-		NSView *windowFrameView = [[window contentView] superview];
+        NSView *windowFrameView = [[window contentView] superview];
         DMMExterminatorButtonView *container = [windowFrameView viewWithTag:EXTERMINATOR_BUTTON_CONTAINER_TAG];
-        
-		if (!container) {
-			CGFloat containerWidth = EXTERMINATOR_MAX_CONTAINER_WIDTH;
-			container = [[[DMMExterminatorButtonView alloc] initWithFrame:NSMakeRect(window.frame.size.width - containerWidth - EXTERMINATOR_BUTTON_OFFSET_FROM_R, windowFrameView.bounds.size.height - 22, containerWidth, 20)] autorelease];
-			container.tag = EXTERMINATOR_BUTTON_CONTAINER_TAG;
-			container.autoresizingMask = NSViewMinXMargin | NSViewMinYMargin | NSViewWidthSizable;
-            
+
+        if (!container) {
+            CGFloat containerWidth = EXTERMINATOR_MAX_CONTAINER_WIDTH;
+            container = [[[DMMExterminatorButtonView alloc] initWithFrame:NSMakeRect(window.frame.size.width - containerWidth - EXTERMINATOR_BUTTON_OFFSET_FROM_R, windowFrameView.bounds.size.height - 22, containerWidth, 20)] autorelease];
+            container.tag = EXTERMINATOR_BUTTON_CONTAINER_TAG;
+            container.autoresizingMask = NSViewMinXMargin | NSViewMinYMargin | NSViewWidthSizable;
+
             container.button.target = self;
             container.button.action = @selector(clearDerivedDataForKeyWindow);
-
-			[container setHidden:![self isButtonEnabled]];
-			[windowFrameView addSubview:container];
-
-		}
-		return container;
-	}
-	return nil;
+            
+            [container setHidden:![self isButtonEnabled]];
+            [windowFrameView addSubview:container];
+        }
+        return container;
+    }
+    return nil;
 }
 
 - (void)windowDidEndLiveResize:(NSNotification *) notification
 {
-	NSWindow *window = [notification object];
-	NSView *button = [self exterminatorButtonForWindow:window];
-	if (button) {
-		double delayInSeconds   = 0.0;
-		dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-		dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
-			[button setHidden:![self isButtonEnabled]];
-		});
-	}
+    NSWindow *window = [notification object];
+    NSView *button = [self exterminatorButtonForWindow:window];
+    if (button) {
+        double delayInSeconds   = 0.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+            [button setHidden:![self isButtonEnabled]];
+        });
+    }
 }
 
 #pragma mark Preferences

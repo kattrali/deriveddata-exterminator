@@ -21,18 +21,18 @@
         _button.autoresizingMask = NSViewWidthSizable;
 
         [_button setBezelStyle:NSTexturedRoundedBezelStyle];
-		[[_button cell] setControlSize:NSSmallControlSize];
-		[_button setFont:[NSFont systemFontOfSize:11.0]];
+        [[_button cell] setControlSize:NSSmallControlSize];
+        [_button setFont:[NSFont systemFontOfSize:11.0]];
         [_button setTitle:@"Clear DerivedData"];
-		[self addSubview:_button];
+        [self addSubview:_button];
     }
-    
+
     return self;
 }
 
 - (BOOL)isOpaque
 {
-	return NO;
+    return NO;
 }
 
 - (float) buttonWidthRelativeToFrame
@@ -48,8 +48,8 @@
 
 - (void)dealloc
 {
-	[_button release];
-	[super dealloc];
+    [_button release];
+    [super dealloc];
 }
 
 @end
