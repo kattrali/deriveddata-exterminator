@@ -34,5 +34,10 @@ Sometimes Xcode needs a friendly helping hand with cleaning out the Derived Data
 ## Usage
 
 - Push Button
-- Get back to building cool stuff
 - Moonwalk (optional, but recommended)
+- Get back to building cool stuff
+
+## References
+
+- [Creating an Xcode4 Plugin](http://www.blackdogfoundry.com/blog/creating-an-xcode4-plugin/) : Plugin structure and project configuration tutorial
+- [MiniXcode](https://github.com/omz/MiniXcode) : Example of how to add UI components to Xcode workspace windows
