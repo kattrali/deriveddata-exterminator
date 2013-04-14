@@ -4,12 +4,18 @@ Sometimes Xcode needs a friendly helping hand with cleaning out the Derived Data
 
 ### Replace This:
 
-*Me:* Build Project
-*Xcode:* Nope, we've got errors.
-*Me:* Clean Project, then Build
-*Xcode:* Nuh uh, still no good.
-*Me:* _delete DerivedData for project_
-*Xcode:* Oh hey, things are looking good.
+**Me:** Build Project
+
+**Xcode:** Nope, we've got errors.
+
+**Me:** Clean Project, then Build
+
+**Xcode:** Nuh uh, still no good.
+
+**Me:** _delete DerivedData for project_
+
+**Xcode:** Oh hey, things are looking swell.
+
 
 ### With This:
 
