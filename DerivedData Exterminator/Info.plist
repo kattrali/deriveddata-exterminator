@@ -26,5 +26,11 @@
 	<string>Copyright © 2013 Delisa Mason. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
 	<string></string>
+	<key>XCGCReady</key>
+	<true/>
+	<key>XCPluginHasUI</key>
+	<false/>
+	<key>XC4Compatible</key>
+	<true/>
 </dict>
 </plist>

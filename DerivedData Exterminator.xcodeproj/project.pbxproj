@@ -7,19 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8A2423D6171A221E000B2AA3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A2423D5171A221E000B2AA3 /* Cocoa.framework */; };
-		8A2423E0171A221E000B2AA3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8A2423DE171A221E000B2AA3 /* InfoPlist.strings */; };
+		8A2423EB171A2248000B2AA3 /* DMMDerivedDataExterminator.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A2423E8171A2248000B2AA3 /* DMMDerivedDataExterminator.m */; };
+		8A2423EC171A2248000B2AA3 /* DMMExterminatorButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A2423EA171A2248000B2AA3 /* DMMExterminatorButtonView.m */; };
+		8AE15E23171A280000767645 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A2423D8171A221E000B2AA3 /* AppKit.framework */; };
+		8AE15E24171A281F00767645 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A2423DA171A221E000B2AA3 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		8A2423D2171A221E000B2AA3 /* DerivedData Exterminator.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "DerivedData Exterminator.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8A2423D5171A221E000B2AA3 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		8A2423D2171A221E000B2AA3 /* DerivedData Exterminator.xcplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "DerivedData Exterminator.xcplugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A2423D8171A221E000B2AA3 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		8A2423D9171A221E000B2AA3 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		8A2423DA171A221E000B2AA3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		8A2423DD171A221E000B2AA3 /* DerivedData Exterminator-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DerivedData Exterminator-Info.plist"; sourceTree = "<group>"; };
-		8A2423DF171A221E000B2AA3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		8A2423E1171A221E000B2AA3 /* DerivedData Exterminator-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DerivedData Exterminator-Prefix.pch"; sourceTree = "<group>"; };
+		8A2423DD171A221E000B2AA3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8A2423E7171A2248000B2AA3 /* DMMDerivedDataExterminator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMMDerivedDataExterminator.h; sourceTree = "<group>"; };
+		8A2423E8171A2248000B2AA3 /* DMMDerivedDataExterminator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMMDerivedDataExterminator.m; sourceTree = "<group>"; };
+		8A2423E9171A2248000B2AA3 /* DMMExterminatorButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMMExterminatorButtonView.h; sourceTree = "<group>"; };
+		8A2423EA171A2248000B2AA3 /* DMMExterminatorButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMMExterminatorButtonView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,7 +29,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A2423D6171A221E000B2AA3 /* Cocoa.framework in Frameworks */,
+				8AE15E24171A281F00767645 /* Foundation.framework in Frameworks */,
+				8AE15E23171A280000767645 /* AppKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,7 +49,7 @@
 		8A2423D3171A221E000B2AA3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8A2423D2171A221E000B2AA3 /* DerivedData Exterminator.bundle */,
+				8A2423D2171A221E000B2AA3 /* DerivedData Exterminator.xcplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -54,25 +57,19 @@
 		8A2423D4171A221E000B2AA3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8A2423D5171A221E000B2AA3 /* Cocoa.framework */,
-				8A2423D7171A221E000B2AA3 /* Other Frameworks */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		8A2423D7171A221E000B2AA3 /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
 				8A2423D8171A221E000B2AA3 /* AppKit.framework */,
-				8A2423D9171A221E000B2AA3 /* CoreData.framework */,
 				8A2423DA171A221E000B2AA3 /* Foundation.framework */,
 			);
-			name = "Other Frameworks";
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		8A2423DB171A221E000B2AA3 /* DerivedData Exterminator */ = {
 			isa = PBXGroup;
 			children = (
+				8A2423E7171A2248000B2AA3 /* DMMDerivedDataExterminator.h */,
+				8A2423E8171A2248000B2AA3 /* DMMDerivedDataExterminator.m */,
+				8A2423E9171A2248000B2AA3 /* DMMExterminatorButtonView.h */,
+				8A2423EA171A2248000B2AA3 /* DMMExterminatorButtonView.m */,
 				8A2423DC171A221E000B2AA3 /* Supporting Files */,
 			);
 			path = "DerivedData Exterminator";
@@ -81,9 +78,7 @@
 		8A2423DC171A221E000B2AA3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				8A2423DD171A221E000B2AA3 /* DerivedData Exterminator-Info.plist */,
-				8A2423DE171A221E000B2AA3 /* InfoPlist.strings */,
-				8A2423E1171A221E000B2AA3 /* DerivedData Exterminator-Prefix.pch */,
+				8A2423DD171A221E000B2AA3 /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -105,7 +100,7 @@
 			);
 			name = "DerivedData Exterminator";
 			productName = "DerivedData Exterminator";
-			productReference = 8A2423D2171A221E000B2AA3 /* DerivedData Exterminator.bundle */;
+			productReference = 8A2423D2171A221E000B2AA3 /* DerivedData Exterminator.xcplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -139,7 +134,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A2423E0171A221E000B2AA3 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,21 +144,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A2423EB171A2248000B2AA3 /* DMMDerivedDataExterminator.m in Sources */,
+				8A2423EC171A2248000B2AA3 /* DMMExterminatorButtonView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		8A2423DE171A221E000B2AA3 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8A2423DF171A221E000B2AA3 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		8A2423E2171A221E000B2AA3 /* Debug */ = {
@@ -229,26 +214,30 @@
 		8A2423E5171A221E000B2AA3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 				COMBINE_HIDPI_IMAGES = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "DerivedData Exterminator/DerivedData Exterminator-Prefix.pch";
-				INFOPLIST_FILE = "DerivedData Exterminator/DerivedData Exterminator-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = "$(HOME)";
+				GCC_ENABLE_OBJC_GC = supported;
+				INFOPLIST_FILE = "DerivedData Exterminator/Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Developer/Shared/Xcode/Plug-ins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = bundle;
+				WRAPPER_EXTENSION = xcplugin;
 			};
 			name = Debug;
 		};
 		8A2423E6171A221E000B2AA3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 				COMBINE_HIDPI_IMAGES = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "DerivedData Exterminator/DerivedData Exterminator-Prefix.pch";
-				INFOPLIST_FILE = "DerivedData Exterminator/DerivedData Exterminator-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = "$(HOME)";
+				GCC_ENABLE_OBJC_GC = supported;
+				INFOPLIST_FILE = "DerivedData Exterminator/Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Developer/Shared/Xcode/Plug-ins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = bundle;
+				WRAPPER_EXTENSION = xcplugin;
 			};
 			name = Release;
 		};
@@ -271,6 +260,7 @@
 				8A2423E6171A221E000B2AA3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
