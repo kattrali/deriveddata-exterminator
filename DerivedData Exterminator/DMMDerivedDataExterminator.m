@@ -15,6 +15,8 @@
 #define EXTERMINATOR_DEFAULT_BUTTON_WIDTH   118.f
 #define EXTERMINATOR_BUTTON_OFFSET_FROM_R   62 // position of button relative to the right edge of the window
 
+#define RELATIVE_DERIVED_DATA_PATH          "Library/Developer/Xcode/DerivedData"
+
 #define kDMMDerivedDataExterminatorShowButtonInTitleBar	@"DMMDerivedDataExterminatorShowButtonInTitleBar"
 
 @interface NSObject (IDEKit)
@@ -57,9 +59,46 @@
   return self;
 }
 
-- (void) exterminate
+- (void) removeDerivedDataForKeyWindow
 {
-    NSLog(@"EXTERMINATE!");
+    NSArray *workspaceWindowControllers = [NSClassFromString(@"IDEWorkspaceWindowController") workspaceWindowControllers];
+
+    for (id controller in workspaceWindowControllers) {
+        if ([[controller valueForKey:@"window"] isKeyWindow]) {
+            id workspace = [controller valueForKey:@"_workspace"];
+            id filePath  = [workspace valueForKey:@"filePath"];
+            NSString *path = (NSString *)[filePath valueForKey:@"pathString"];
+            
+            for (NSString *component in [path componentsSeparatedByString:@"/"]) {
+                NSUInteger location = [component rangeOfString:@".xc"].location;
+                if (location != NSNotFound) {
+                    NSString *projectName = [component substringToIndex:location];
+                    [self removeDerivedDataForProject:projectName];
+                    break;
+                }
+            }
+            break;
+        }
+    }
+}
+
+- (void) removeDerivedDataForProject: (NSString *) projectName
+{
+    NSFileManager *manager     = [NSFileManager defaultManager];
+    NSString *derivedDataPath  = [NSHomeDirectory() stringByAppendingPathComponent:@(RELATIVE_DERIVED_DATA_PATH)];
+    NSString *projectPrefix    = [projectName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
+
+    NSError *error = nil;
+    NSArray *directories = [manager contentsOfDirectoryAtPath:derivedDataPath error:&error];
+    if (error) return;
+    
+    for (NSString *subdirectory in directories) {
+        if ([subdirectory hasPrefix:projectPrefix]) {
+            NSString *removablePath = [derivedDataPath stringByAppendingPathComponent:subdirectory];
+            [manager removeItemAtPath:removablePath error:&error];
+            if (error) NSLog(@"Sad Panda: %@", [error description]);
+        }
+    }
 }
 
 - (NSView *)windowTitleViewForWindow:(NSWindow *)window
@@ -130,7 +169,7 @@
 			container.tag = EXTERMINATOR_BUTTON_CONTAINER_TAG;
 			container.autoresizingMask = NSViewMinXMargin | NSViewMinYMargin | NSViewWidthSizable;
             container.button.target = self;
-            container.button.action = @selector(exterminate);
+            container.button.action = @selector(removeDerivedDataForKeyWindow);
 
 			[container setHidden:![self isButtonEnabled]];
 			[windowFrameView addSubview:container];
