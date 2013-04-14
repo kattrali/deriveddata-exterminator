@@ -12,7 +12,7 @@ Sometimes Xcode needs a friendly helping hand with cleaning out the Derived Data
 
 **Xcode:** Nuh uh, still no good.
 
-**Me:** _delete DerivedData for project_
+**Me:** _Open terminal, find DerivedData subdirectories for project, delete directories_
 
 **Xcode:** Oh hey, things are looking swell.
 
