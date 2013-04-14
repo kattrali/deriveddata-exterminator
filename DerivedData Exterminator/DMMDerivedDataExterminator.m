@@ -3,7 +3,7 @@
 //  DerivedDataExterminator
 //
 //  Created by Delisa Mason on 4/13/13.
-//  Copyright (c) 2013 Delisa Mason. All rights reserved.
+//  Copyright (c) 2013 Delisa Mason.
 //
 
 #import "DMMDerivedDataExterminator.h"
@@ -12,7 +12,7 @@
 #define EXTERMINATOR_BUTTON_CONTAINER_TAG	932
 #define EXTERMINATOR_BUTTON_TAG				    933
 
-#define EXTERMINATOR_DEFAULT_BUTTON_WIDTH   118.f
+#define EXTERMINATOR_MAX_CONTAINER_WIDTH    128.f
 #define EXTERMINATOR_BUTTON_OFFSET_FROM_R   62 // position of button relative to the right edge of the window
 
 #define RELATIVE_DERIVED_DATA_PATH          "Library/Developer/Xcode/DerivedData"
@@ -101,17 +101,6 @@
     }
 }
 
-- (NSView *)windowTitleViewForWindow:(NSWindow *)window
-{
-	NSView *windowFrameView = [[window contentView] superview];
-	for (NSView *view in windowFrameView.subviews) {
-		if ([view isKindOfClass:NSClassFromString(@"DVTDualProxyWindowTitleView")]) {
-			return view;
-		}
-	}
-	return nil;
-}
-
 - (BOOL) isButtonEnabled
 {
     return [[NSUserDefaults standardUserDefaults] boolForKey:kDMMDerivedDataExterminatorShowButtonInTitleBar];
@@ -140,7 +129,7 @@
 	@catch (NSException *exception) { }
 }
 
-- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+- (BOOL) validateMenuItem:(NSMenuItem *)menuItem
 {
 	if ([menuItem action] == @selector(toggleButtonInTitleBar:)) {
 		[menuItem setState:[self isButtonEnabled] ? NSOnState : NSOffState];
@@ -160,14 +149,11 @@
         DMMExterminatorButtonView *container = [windowFrameView viewWithTag:EXTERMINATOR_BUTTON_CONTAINER_TAG];
         
 		if (!container) {
-			CGFloat buttonWidth = EXTERMINATOR_DEFAULT_BUTTON_WIDTH;
-			NSView *titleView = [self windowTitleViewForWindow:window];
-			if (titleView) {
-				buttonWidth = MIN(buttonWidth, titleView.frame.origin.x - 10 - 80);
-			}
-			container = [[[DMMExterminatorButtonView alloc] initWithFrame:NSMakeRect(window.frame.size.width - buttonWidth - EXTERMINATOR_BUTTON_OFFSET_FROM_R, windowFrameView.bounds.size.height - 22, buttonWidth + 10, 20)] autorelease];
+			CGFloat containerWidth = EXTERMINATOR_MAX_CONTAINER_WIDTH;
+			container = [[[DMMExterminatorButtonView alloc] initWithFrame:NSMakeRect(window.frame.size.width - containerWidth - EXTERMINATOR_BUTTON_OFFSET_FROM_R, windowFrameView.bounds.size.height - 22, containerWidth, 20)] autorelease];
 			container.tag = EXTERMINATOR_BUTTON_CONTAINER_TAG;
 			container.autoresizingMask = NSViewMinXMargin | NSViewMinYMargin | NSViewWidthSizable;
+            
             container.button.target = self;
             container.button.action = @selector(removeDerivedDataForKeyWindow);
 
