@@ -11,8 +11,9 @@
 
 @interface DMMDerivedDataExterminator : NSObject
 
-- (void) removeDerivedDataForKeyWindow;
-- (void) removeDerivedDataForProject: (NSString *) projectName;
+- (void) clearAllDerivedData;
+- (void) clearDerivedDataForKeyWindow;
+- (void) clearDerivedDataForProject: (NSString *) projectName;
 - (void) toggleButtonInTitleBar: (id) sender;
 - (NSButton *) exterminatorButtonForWindow: (NSWindow *) window;
 @end

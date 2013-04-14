@@ -13,7 +13,7 @@
 #define EXTERMINATOR_BUTTON_TAG				    933
 
 #define EXTERMINATOR_MAX_CONTAINER_WIDTH    128.f
-#define EXTERMINATOR_BUTTON_OFFSET_FROM_R   62 // position of button relative to the right edge of the window
+#define EXTERMINATOR_BUTTON_OFFSET_FROM_R   22 // position of button relative to the right edge of the window
 
 #define RELATIVE_DERIVED_DATA_PATH          "Library/Developer/Xcode/DerivedData"
 
@@ -50,6 +50,15 @@
     NSMenuItem *viewMenuItem = [[NSApp mainMenu] itemWithTitle:@"View"];
     if (viewMenuItem) {
         [[viewMenuItem submenu] addItem:[NSMenuItem separatorItem]];
+
+        NSMenuItem *clearItem = [[[NSMenuItem alloc] initWithTitle:@"Clear Derived Data" action:@selector(clearDerivedDataForKeyWindow) keyEquivalent:@""] autorelease];
+        [clearItem setTarget:self];
+        [[viewMenuItem submenu] addItem:clearItem];
+        
+        NSMenuItem *clearAllItem = [[[NSMenuItem alloc] initWithTitle:@"Clear All Derived Data" action:@selector(clearAllDerivedData) keyEquivalent:@""] autorelease];
+        [clearAllItem setTarget:self];
+        [[viewMenuItem submenu] addItem:clearAllItem];
+        
         NSMenuItem *toggleButtonInTitleBarItem = [[[NSMenuItem alloc] initWithTitle:@"Derived Data Exterminator in Title Bar" action:@selector(toggleButtonInTitleBar:) keyEquivalent:@""] autorelease];
         [toggleButtonInTitleBarItem setTarget:self];
         [[viewMenuItem submenu] addItem:toggleButtonInTitleBarItem];
@@ -59,7 +68,15 @@
   return self;
 }
 
-- (void) removeDerivedDataForKeyWindow
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super dealloc];
+}
+
+#pragma mark - DerivedData Management
+
+- (void) clearDerivedDataForKeyWindow
 {
     NSArray *workspaceWindowControllers = [NSClassFromString(@"IDEWorkspaceWindowController") workspaceWindowControllers];
 
@@ -73,7 +90,7 @@
                 NSUInteger location = [component rangeOfString:@".xc"].location;
                 if (location != NSNotFound) {
                     NSString *projectName = [component substringToIndex:location];
-                    [self removeDerivedDataForProject:projectName];
+                    [self clearDerivedDataForProject:projectName];
                     break;
                 }
             }
@@ -82,11 +99,11 @@
     }
 }
 
-- (void) removeDerivedDataForProject: (NSString *) projectName
+- (void) clearDerivedDataForProject: (NSString *) projectName
 {
-    NSFileManager *manager     = [NSFileManager defaultManager];
-    NSString *derivedDataPath  = [NSHomeDirectory() stringByAppendingPathComponent:@(RELATIVE_DERIVED_DATA_PATH)];
-    NSString *projectPrefix    = [projectName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
+    NSFileManager *manager    = [NSFileManager defaultManager];
+    NSString *derivedDataPath = [NSHomeDirectory() stringByAppendingPathComponent:@(RELATIVE_DERIVED_DATA_PATH)];
+    NSString *projectPrefix   = [projectName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
 
     NSError *error = nil;
     NSArray *directories = [manager contentsOfDirectoryAtPath:derivedDataPath error:&error];
@@ -101,15 +118,23 @@
     }
 }
 
-- (BOOL) isButtonEnabled
+- (void) clearAllDerivedData
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kDMMDerivedDataExterminatorShowButtonInTitleBar];
+    NSFileManager *manager    = [NSFileManager defaultManager];
+    NSString *derivedDataPath = [NSHomeDirectory() stringByAppendingPathComponent:@(RELATIVE_DERIVED_DATA_PATH)];
+
+    NSError *error = nil;
+    NSArray *directories = [manager contentsOfDirectoryAtPath:derivedDataPath error:&error];
+    if (error) return;
+
+    for (NSString *subdirectory in directories) {
+        NSString *removablePath = [derivedDataPath stringByAppendingPathComponent:subdirectory];
+        [manager removeItemAtPath:removablePath error:&error];
+        if (error) NSLog(@"Sad Panda: %@", [error description]);
+    }
 }
 
-- (void) setButtonEnabled: (BOOL) enabled
-{
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kDMMDerivedDataExterminatorShowButtonInTitleBar];
-}
+#pragma mark - GUI Management
 
 - (void) toggleButtonInTitleBar:(id)sender
 {
@@ -155,7 +180,7 @@
 			container.autoresizingMask = NSViewMinXMargin | NSViewMinYMargin | NSViewWidthSizable;
             
             container.button.target = self;
-            container.button.action = @selector(removeDerivedDataForKeyWindow);
+            container.button.action = @selector(clearDerivedDataForKeyWindow);
 
 			[container setHidden:![self isButtonEnabled]];
 			[windowFrameView addSubview:container];
@@ -179,10 +204,16 @@
 	}
 }
 
-- (void)dealloc
+#pragma mark Preferences
+
+- (BOOL) isButtonEnabled
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[super dealloc];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:kDMMDerivedDataExterminatorShowButtonInTitleBar];
+}
+
+- (void) setButtonEnabled: (BOOL) enabled
+{
+    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kDMMDerivedDataExterminatorShowButtonInTitleBar];
 }
 
 @end
