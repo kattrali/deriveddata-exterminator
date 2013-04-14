@@ -51,7 +51,8 @@
     if (viewMenuItem) {
         [[viewMenuItem submenu] addItem:[NSMenuItem separatorItem]];
 
-        NSMenuItem *clearItem = [[[NSMenuItem alloc] initWithTitle:@"Clear Derived Data" action:@selector(clearDerivedDataForKeyWindow) keyEquivalent:@""] autorelease];
+        NSMenuItem *clearItem = [[[NSMenuItem alloc] initWithTitle:@"Clear Derived Data for Project" action:@selector(clearDerivedDataForKeyWindow) keyEquivalent:@"h"] autorelease];
+        [clearItem setKeyEquivalentModifierMask: NSShiftKeyMask | NSCommandKeyMask];
         [clearItem setTarget:self];
         [[viewMenuItem submenu] addItem:clearItem];
         
