@@ -52,18 +52,21 @@
         if (viewMenuItem) {
             [[viewMenuItem submenu] addItem:[NSMenuItem separatorItem]];
 
-            NSMenuItem *clearItem = [[[NSMenuItem alloc] initWithTitle:@"Clear Derived Data for Project" action:@selector(clearDerivedDataForKeyWindow) keyEquivalent:@"h"] autorelease];
+            NSMenuItem *clearItem = [[NSMenuItem alloc] initWithTitle:@"Clear Derived Data for Project" action:@selector(clearDerivedDataForKeyWindow) keyEquivalent:@"h"];
             [clearItem setKeyEquivalentModifierMask: NSShiftKeyMask | NSCommandKeyMask];
             [clearItem setTarget:self];
             [[viewMenuItem submenu] addItem:clearItem];
+            [clearItem release];
 
-            NSMenuItem *clearAllItem = [[[NSMenuItem alloc] initWithTitle:@"Clear All Derived Data" action:@selector(clearAllDerivedData) keyEquivalent:@""] autorelease];
+            NSMenuItem *clearAllItem = [[NSMenuItem alloc] initWithTitle:@"Clear All Derived Data" action:@selector(clearAllDerivedData) keyEquivalent:@""];
             [clearAllItem setTarget:self];
             [[viewMenuItem submenu] addItem:clearAllItem];
+            [clearAllItem release];
 
-            NSMenuItem *toggleButtonInTitleBarItem = [[[NSMenuItem alloc] initWithTitle:@"Derived Data Exterminator in Title Bar" action:@selector(toggleButtonInTitleBar:) keyEquivalent:@""] autorelease];
+            NSMenuItem *toggleButtonInTitleBarItem = [[NSMenuItem alloc] initWithTitle:@"Derived Data Exterminator in Title Bar" action:@selector(toggleButtonInTitleBar:) keyEquivalent:@""];
             [toggleButtonInTitleBarItem setTarget:self];
             [[viewMenuItem submenu] addItem:toggleButtonInTitleBarItem];
+            [toggleButtonInTitleBarItem release];
         }
 
     }
@@ -179,12 +182,6 @@
     return YES;
 }
 
-- (NSButton *) exterminatorButtonForWindow: (NSWindow *) window
-{
-    DMMExterminatorButtonView *container = [self exterminatorButtonContainerForWindow:window];
-    return container.button;
-}
-
 - (DMMExterminatorButtonView *) exterminatorButtonContainerForWindow: (NSWindow *) window {
     if ([window isKindOfClass:NSClassFromString(@"IDEWorkspaceWindow")]) {
         NSView *windowFrameView = [[window contentView] superview];
@@ -210,7 +207,7 @@
 - (void)windowDidEndLiveResize:(NSNotification *) notification
 {
     NSWindow *window = [notification object];
-    NSView *button = [self exterminatorButtonForWindow:window];
+    NSView *button = [self exterminatorButtonContainerForWindow:window].button;
     if (button) {
         double delayInSeconds   = 0.0;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
