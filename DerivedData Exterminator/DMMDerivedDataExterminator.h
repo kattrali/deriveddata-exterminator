@@ -13,6 +13,5 @@
 
 - (void) clearAllDerivedData;
 - (void) clearDerivedDataForKeyWindow;
-- (void) clearDerivedDataForProject: (NSString *) projectName;
 - (void) toggleButtonInTitleBar: (id) sender;
 @end

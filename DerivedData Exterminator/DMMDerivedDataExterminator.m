@@ -8,10 +8,11 @@
 
 #import "DMMDerivedDataExterminator.h"
 #import "DMMExterminatorButtonView.h"
+#import "DMMDerivedDataHandler.h"
 
-#define EXTERMINATOR_BUTTON_CONTAINER_TAG	932
-#define EXTERMINATOR_MAX_CONTAINER_WIDTH    128.f
-#define EXTERMINATOR_BUTTON_OFFSET_FROM_R   22 // position of button relative to the right edge of the window
+#define EXTERMINATOR_BUTTON_CONTAINER_TAG 932
+#define EXTERMINATOR_MAX_CONTAINER_WIDTH  128.f
+#define EXTERMINATOR_BUTTON_OFFSET_FROM_R 22 // position of button relative to the right edge of the window
 
 #define kDMMDerivedDataExterminatorShowButtonInTitleBar	@"DMMDerivedDataExterminatorShowButtonInTitleBar"
 
@@ -23,7 +24,6 @@
 @interface DMMDerivedDataExterminator()
 
 - (DMMExterminatorButtonView *) exterminatorButtonContainerForWindow: (NSWindow *) window;
-- (void) showErrorAlert: (NSError *) error forPath: (NSString *) path;
 - (void) updateTitleBarsFromPreferences;
 @end
 
@@ -78,15 +78,6 @@
 
 #pragma mark - DerivedData Management
 
-- (NSString *) derivedDataLocation
-{
-    NSArray *workspaceWindowControllers = [NSClassFromString(@"IDEWorkspaceWindowController") workspaceWindowControllers];
-    if (workspaceWindowControllers.count < 1) return nil;
-
-    id workspace = [workspaceWindowControllers[0] valueForKey:@"_workspace"];
-    id workspaceArena = [workspace valueForKey:@"_workspaceArena"];
-    return [[workspaceArena derivedDataLocation] valueForKey:@"_pathString"];
-}
 
 - (void) clearDerivedDataForKeyWindow
 {
@@ -95,64 +86,17 @@
     for (id controller in workspaceWindowControllers) {
         if ([[controller valueForKey:@"window"] isKeyWindow]) {
             id workspace = [controller valueForKey:@"_workspace"];
-            [self clearDerivedDataForProject:[workspace valueForKey:@"name"]];
-        }
-    }
-}
-
-- (void) clearDerivedDataForProject: (NSString *) projectName
-{
-    NSFileManager *manager    = [NSFileManager defaultManager];
-    NSString *derivedDataPath = [self derivedDataLocation];
-    NSString *projectPrefix   = [projectName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
-    if (!derivedDataPath) return;
-
-    NSError *error = nil;
-    NSArray *directories = [manager contentsOfDirectoryAtPath:derivedDataPath error:&error];
-    if (error) return;
-
-    for (NSString *subdirectory in directories) {
-        if ([subdirectory hasPrefix:projectPrefix]) {
-            NSString *removablePath = [derivedDataPath stringByAppendingPathComponent:subdirectory];
-            [manager removeItemAtPath:removablePath error:&error];
-            if (error) {
-                NSLog(@"Failed to remove Derived Data: %@", [error description]);
-                [self showErrorAlert:error forPath:removablePath];
-                break;
-            }
+            [DMMDerivedDataHandler clearDerivedDataForProject:[workspace valueForKey:@"name"]];
         }
     }
 }
 
 - (void) clearAllDerivedData
 {
-    NSFileManager *manager    = [NSFileManager defaultManager];
-    NSString *derivedDataPath = [self derivedDataLocation];
-    if (!derivedDataPath) return;
-
-    NSError *error = nil;
-    NSArray *directories = [manager contentsOfDirectoryAtPath:derivedDataPath error:&error];
-    if (error) return;
-
-    for (NSString *subdirectory in directories) {
-        NSString *removablePath = [derivedDataPath stringByAppendingPathComponent:subdirectory];
-        [manager removeItemAtPath:removablePath error:&error];
-        if (error) {
-            NSLog(@"Failed to remove all Derived Data: %@", [error description]);
-            [self showErrorAlert:error forPath:removablePath];
-            break;
-        }
-    }
+    [DMMDerivedDataHandler clearAllDerivedData];
 }
 
 #pragma mark - GUI Management
-
-- (void) showErrorAlert:(NSError *) error forPath: (NSString *) path
-{
-    NSString *message = [NSString stringWithFormat:@"An error occurred while removing %@:\n\n %@", path, [error localizedDescription]];
-    NSAlert *alert    = [NSAlert alertWithMessageText:message defaultButton:nil alternateButton:nil otherButton:nil informativeTextWithFormat:@""];
-    [alert runModal];
-}
 
 - (void) toggleButtonInTitleBar:(id)sender
 {

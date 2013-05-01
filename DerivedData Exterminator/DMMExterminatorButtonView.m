@@ -8,8 +8,8 @@
 
 #import "DMMExterminatorButtonView.h"
 
-#define EXTERMINATOR_DEFAULT_BUTTON_WIDTH   118.f
-#define EXTERMINATOR_CONTAINER_MARGIN       2.f
+#define EXTERMINATOR_DEFAULT_BUTTON_WIDTH 118.f
+#define EXTERMINATOR_CONTAINER_MARGIN     2.f
 
 @implementation DMMExterminatorButtonView
 
