@@ -10,12 +10,8 @@
 #import "DMMExterminatorButtonView.h"
 
 #define EXTERMINATOR_BUTTON_CONTAINER_TAG	932
-#define EXTERMINATOR_BUTTON_TAG				    933
-
 #define EXTERMINATOR_MAX_CONTAINER_WIDTH    128.f
 #define EXTERMINATOR_BUTTON_OFFSET_FROM_R   22 // position of button relative to the right edge of the window
-
-#define RELATIVE_DERIVED_DATA_PATH          "Library/Developer/Xcode/DerivedData"
 
 #define kDMMDerivedDataExterminatorShowButtonInTitleBar	@"DMMDerivedDataExterminatorShowButtonInTitleBar"
 
@@ -27,7 +23,7 @@
 @interface DMMDerivedDataExterminator()
 
 - (DMMExterminatorButtonView *) exterminatorButtonContainerForWindow: (NSWindow *) window;
-- (void) showErrorAlert:(NSError *) error forPath: (NSString *) path;
+- (void) showErrorAlert: (NSError *) error forPath: (NSString *) path;
 - (void) updateTitleBarsFromPreferences;
 @end
 
@@ -46,7 +42,6 @@
 - (id)init
 {
     if (self = [super init]) {
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(logNotification:) name:nil object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidEndLiveResize:) name:NSWindowDidEndLiveResizeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTitleBarsFromPreferences) name:NSWindowDidBecomeKeyNotification object:nil];
 
@@ -83,8 +78,6 @@
 
 #pragma mark - DerivedData Management
 
-#pragma mark - DerivedData Management
-
 - (NSString *) derivedDataLocation
 {
     NSArray *workspaceWindowControllers = [NSClassFromString(@"IDEWorkspaceWindowController") workspaceWindowControllers];
@@ -112,6 +105,7 @@
     NSFileManager *manager    = [NSFileManager defaultManager];
     NSString *derivedDataPath = [self derivedDataLocation];
     NSString *projectPrefix   = [projectName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
+    if (!derivedDataPath) return;
 
     NSError *error = nil;
     NSArray *directories = [manager contentsOfDirectoryAtPath:derivedDataPath error:&error];
@@ -134,6 +128,7 @@
 {
     NSFileManager *manager    = [NSFileManager defaultManager];
     NSString *derivedDataPath = [self derivedDataLocation];
+    if (!derivedDataPath) return;
 
     NSError *error = nil;
     NSArray *directories = [manager contentsOfDirectoryAtPath:derivedDataPath error:&error];
