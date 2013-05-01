@@ -21,6 +21,7 @@
 
 @interface NSObject (IDEKit)
 + (id) workspaceWindowControllers;
+- (id) derivedDataLocation;
 @end
 
 @interface DMMDerivedDataExterminator()
@@ -45,6 +46,7 @@
 - (id)init
 {
     if (self = [super init]) {
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(logNotification:) name:nil object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidEndLiveResize:) name:NSWindowDidEndLiveResizeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTitleBarsFromPreferences) name:NSWindowDidBecomeKeyNotification object:nil];
 
@@ -81,6 +83,18 @@
 
 #pragma mark - DerivedData Management
 
+#pragma mark - DerivedData Management
+
+- (NSString *) derivedDataLocation
+{
+    NSArray *workspaceWindowControllers = [NSClassFromString(@"IDEWorkspaceWindowController") workspaceWindowControllers];
+    if (workspaceWindowControllers.count < 1) return nil;
+
+    id workspace = [workspaceWindowControllers[0] valueForKey:@"_workspace"];
+    id workspaceArena = [workspace valueForKey:@"_workspaceArena"];
+    return [[workspaceArena derivedDataLocation] valueForKey:@"_pathString"];
+}
+
 - (void) clearDerivedDataForKeyWindow
 {
     NSArray *workspaceWindowControllers = [NSClassFromString(@"IDEWorkspaceWindowController") workspaceWindowControllers];
@@ -88,18 +102,7 @@
     for (id controller in workspaceWindowControllers) {
         if ([[controller valueForKey:@"window"] isKeyWindow]) {
             id workspace = [controller valueForKey:@"_workspace"];
-            id filePath  = [workspace valueForKey:@"filePath"];
-            NSString *path = (NSString *)[filePath valueForKey:@"pathString"];
-
-            for (NSString *component in [path componentsSeparatedByString:@"/"]) {
-                NSUInteger location = [component rangeOfString:@".xc"].location;
-                if (location != NSNotFound) {
-                    NSString *projectName = [component substringToIndex:location];
-                    [self clearDerivedDataForProject:projectName];
-                    break;
-                }
-            }
-            break;
+            [self clearDerivedDataForProject:[workspace valueForKey:@"name"]];
         }
     }
 }
@@ -107,7 +110,7 @@
 - (void) clearDerivedDataForProject: (NSString *) projectName
 {
     NSFileManager *manager    = [NSFileManager defaultManager];
-    NSString *derivedDataPath = [NSHomeDirectory() stringByAppendingPathComponent:@(RELATIVE_DERIVED_DATA_PATH)];
+    NSString *derivedDataPath = [self derivedDataLocation];
     NSString *projectPrefix   = [projectName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
 
     NSError *error = nil;
@@ -130,7 +133,7 @@
 - (void) clearAllDerivedData
 {
     NSFileManager *manager    = [NSFileManager defaultManager];
-    NSString *derivedDataPath = [NSHomeDirectory() stringByAppendingPathComponent:@(RELATIVE_DERIVED_DATA_PATH)];
+    NSString *derivedDataPath = [self derivedDataLocation];
 
     NSError *error = nil;
     NSArray *directories = [manager contentsOfDirectoryAtPath:derivedDataPath error:&error];
