@@ -66,14 +66,19 @@
 
 + (void) removeDirectoryAtPath: (NSString *) path
 {
+    NSLog(@"DD-E: Clearing Derived Data at Path: %@", path);
     NSError *error = nil;
     [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
     if (error) {
-        NSLog(@"DD-E: Failed to remove all Derived Data: %@", [error description]);
+        NSLog(@"DD-E: Failed to remove all Derived Data: %@ Path: %@", [error description], path);
         [self showErrorAlert:error forPath:path];
     } else if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
         // Retry once
         [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
+    }
+
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        [self showErrorAlert:[NSError errorWithDomain:[NSString stringWithFormat:@"DerivedData Exterminator - removing directory failed after multiple attempts: %@",path] code:668 userInfo:nil] forPath:path];
     }
 }
 
