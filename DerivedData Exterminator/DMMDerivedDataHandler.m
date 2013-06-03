@@ -42,6 +42,7 @@
 
     id workspace = [workspaceWindowControllers[0] valueForKey:@"_workspace"];
     id workspaceArena = [workspace valueForKey:@"_workspaceArena"];
+    [workspaceArena derivedDataLocation]; // Initialize custom location
     return [[workspaceArena derivedDataLocation] valueForKey:@"_pathString"];
 }
 
