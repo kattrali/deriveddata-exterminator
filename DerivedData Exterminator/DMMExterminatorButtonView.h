@@ -11,7 +11,7 @@
 
 @interface DMMExterminatorButtonView : NSView
 
-@property (nonatomic, retain) NSButton *button;
+@property (nonatomic, strong) NSButton *button;
 @property (nonatomic, assign) NSInteger tag;
 
 @end
