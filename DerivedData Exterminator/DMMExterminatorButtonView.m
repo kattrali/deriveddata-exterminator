@@ -46,10 +46,4 @@
     self.button.frame = CGRectMake(self.frame.size.width - buttonWidth - EXTERMINATOR_CONTAINER_MARGIN, self.button.frame.origin.y, buttonWidth, self.button.frame.size.height);
 }
 
-- (void)dealloc
-{
-    [_button release];
-    [super dealloc];
-}
-
 @end

@@ -53,27 +53,18 @@
             [clearItem setKeyEquivalentModifierMask: NSShiftKeyMask | NSCommandKeyMask];
             [clearItem setTarget:self];
             [[viewMenuItem submenu] addItem:clearItem];
-            [clearItem release];
 
             NSMenuItem *clearAllItem = [[NSMenuItem alloc] initWithTitle:@"Clear All Derived Data" action:@selector(clearAllDerivedData) keyEquivalent:@""];
             [clearAllItem setTarget:self];
             [[viewMenuItem submenu] addItem:clearAllItem];
-            [clearAllItem release];
 
             NSMenuItem *toggleButtonInTitleBarItem = [[NSMenuItem alloc] initWithTitle:@"Derived Data Exterminator in Title Bar" action:@selector(toggleButtonInTitleBar:) keyEquivalent:@""];
             [toggleButtonInTitleBarItem setTarget:self];
             [[viewMenuItem submenu] addItem:toggleButtonInTitleBarItem];
-            [toggleButtonInTitleBarItem release];
         }
 
     }
     return self;
-}
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super dealloc];
 }
 
 #pragma mark - DerivedData Management
@@ -131,7 +122,7 @@
 
         if (!container) {
             CGFloat containerWidth = EXTERMINATOR_MAX_CONTAINER_WIDTH;
-            container = [[[DMMExterminatorButtonView alloc] initWithFrame:NSMakeRect(window.frame.size.width - containerWidth - EXTERMINATOR_BUTTON_OFFSET_FROM_R, windowFrameView.bounds.size.height - 22, containerWidth, 20)] autorelease];
+            container = [[DMMExterminatorButtonView alloc] initWithFrame:NSMakeRect(window.frame.size.width - containerWidth - EXTERMINATOR_BUTTON_OFFSET_FROM_R, windowFrameView.bounds.size.height - 22, containerWidth, 20)];
             container.tag = EXTERMINATOR_BUTTON_CONTAINER_TAG;
             container.autoresizingMask = NSViewMinXMargin | NSViewMinYMargin | NSViewWidthSizable;
 
