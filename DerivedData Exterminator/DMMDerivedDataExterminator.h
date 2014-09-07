@@ -13,5 +13,5 @@
 
 - (void) clearAllDerivedData;
 - (void) clearDerivedDataForKeyWindow;
-- (void) toggleButtonInTitleBar: (id) sender;
+
 @end
