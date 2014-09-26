@@ -35,7 +35,7 @@ OR
 - Restart Xcode
 - Select `Derived Data Exterminator in Title Bar` in the `View` menu
 
-Note: The default (`master`) branch builds for Xcode5. To build the project for Xcode4, check out the `xcode4` branch before building the project.
+Note: The default (`master`) branch builds for Xcode 5+. To build the project for Xcode4, check out the `xcode4` branch before building the project.
 
 ## Usage
 
