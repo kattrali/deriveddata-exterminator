@@ -127,7 +127,7 @@
             CGFloat containerWidth = EXTERMINATOR_MAX_CONTAINER_WIDTH;
             container = [[DMMExterminatorButtonView alloc] initWithFrame:NSMakeRect(window.frame.size.width - containerWidth - EXTERMINATOR_BUTTON_OFFSET_FROM_R, windowFrameView.bounds.size.height - 22, containerWidth, 20)];
             container.tag = EXTERMINATOR_BUTTON_CONTAINER_TAG;
-            container.autoresizingMask = NSViewMinXMargin | NSViewMinYMargin | NSViewWidthSizable;
+            container.autoresizingMask = NSViewMinXMargin | NSViewMinYMargin;
 
             container.button.target = self;
             container.button.action = @selector(clearDerivedDataForKeyWindow);
