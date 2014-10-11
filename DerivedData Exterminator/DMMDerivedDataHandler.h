@@ -13,5 +13,6 @@
 
 + (void) clearDerivedDataForProject: (NSString *) projectName;
 + (void) clearAllDerivedData;
++ (void) clearModuleCache;
 
 @end

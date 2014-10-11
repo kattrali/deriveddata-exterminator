@@ -33,6 +33,16 @@
     }
 }
 
++ (void) clearModuleCache
+{
+    for (NSString *subdirectory in [self derivedDataSubdirectoryPaths]) {
+        if ([[[subdirectory pathComponents] lastObject] isEqualToString:@"ModuleCache"]) {
+            [self removeDirectoryAtPath:subdirectory];
+            break;
+        }
+    }
+}
+
 #pragma mark - Private
 
 + (NSString *) derivedDataLocation
