@@ -1,48 +1,44 @@
-//
-//  DMMDerivedDataExterminator.m
-//  DerivedDataExterminator
-//
-//  Created by Delisa Mason on 4/13/13.
-//  Copyright (c) 2013 Delisa Mason.
-//
 
 #import "DMMDerivedDataExterminator.h"
-#import "DMMExterminatorButtonView.h"
 #import "DMMDerivedDataHandler.h"
+#import "DMMButtonViewController.h"
 
-#define EXTERMINATOR_BUTTON_CONTAINER_TAG 932
-#define EXTERMINATOR_MAX_CONTAINER_WIDTH 128.f
-#define EXTERMINATOR_BUTTON_OFFSET_FROM_R 22 // position of button relative to the right edge of the window
-
-#define kDMMDerivedDataExterminatorShowButtonInTitleBar @"DMMDerivedDataExterminatorShowButtonInTitleBar"
-
-@interface NSObject (IDEKit)
+@interface NSObject (IDEWorkspaceWindowController)
 + (id)workspaceWindowControllers;
-- (id)derivedDataLocation;
+@end
+
+@interface NSObject (DVTViewControllerToolbarItem)
++ (instancetype)alloc;
+- (id)initWithItemIdentifier:(NSString*)identifier;
+- (NSArray*)allowedItemIdentifiers;
+- (NSDictionary*)toolbarItemProviders;
 @end
 
 @interface DMMDerivedDataExterminator ()
+- (void)updateToolbarsFromPreferences;
 
-- (DMMExterminatorButtonView*)exterminatorButtonContainerForWindow:(NSWindow*)window;
-- (void)updateTitleBarsFromPreferences;
+@property (nonatomic, strong) NSBundle* bundle;
 @end
 
 @implementation DMMDerivedDataExterminator
 
+static NSString* const DMMDerivedDataExterminatorButtonIdentifier = @"me.delisa.DMMDerivedDataExterminator";
+static NSString* const DMMDerivedDataExterminatorShowButtonInTitleBar = @"DMMDerivedDataExterminatorShowButtonInTitleBar";
+
 + (void)pluginDidLoad:(NSBundle*)plugin
 {
-    static id sharedPlugin = nil;
+    static DMMDerivedDataExterminator* sharedPlugin = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedPlugin = [[self alloc] init];
+        sharedPlugin.bundle = plugin;
     });
 }
 
 - (id)init
 {
     if (self = [super init]) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidEndLiveResize:) name:NSWindowDidEndLiveResizeNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTitleBarsFromPreferences) name:NSWindowDidBecomeKeyNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateToolbarsFromPreferences) name:NSWindowDidBecomeKeyNotification object:nil];
         [self createMenuItems];
     }
     return self;
@@ -63,9 +59,9 @@
         [clearAllItem setTarget:self];
         [[viewMenuItem submenu] addItem:clearAllItem];
 
-        NSMenuItem* toggleButtonInTitleBarItem = [[NSMenuItem alloc] initWithTitle:@"Derived Data Exterminator in Title Bar" action:@selector(toggleButtonInTitleBar:) keyEquivalent:@""];
-        [toggleButtonInTitleBarItem setTarget:self];
-        [[viewMenuItem submenu] addItem:toggleButtonInTitleBarItem];
+        NSMenuItem* toggleButtonInToolbarItem = [[NSMenuItem alloc] initWithTitle:@"Derived Data Exterminator in Toolbar" action:@selector(toggleButtonInToolbar:) keyEquivalent:@""];
+        [toggleButtonInToolbarItem setTarget:self];
+        [[viewMenuItem submenu] addItem:toggleButtonInToolbarItem];
     }
 }
 
@@ -79,6 +75,7 @@
         if ([[controller valueForKey:@"window"] isKeyWindow]) {
             id workspace = [controller valueForKey:@"_workspace"];
             [DMMDerivedDataHandler clearDerivedDataForProject:[workspace valueForKey:@"name"]];
+            return;
         }
     }
 }
@@ -90,20 +87,23 @@
 
 #pragma mark - GUI Management
 
-- (void)toggleButtonInTitleBar:(id)sender
+- (void)toggleButtonInToolbar:(id)sender
 {
     [self setButtonEnabled:![self isButtonEnabled]];
-    [self updateTitleBarsFromPreferences];
+    [self updateToolbarsFromPreferences];
 }
 
-- (void)updateTitleBarsFromPreferences
+- (void)updateToolbarsFromPreferences
 {
     @try {
         NSArray* workspaceWindowControllers = [NSClassFromString(@"IDEWorkspaceWindowController") workspaceWindowControllers];
+        BOOL shouldShowButton = [self isButtonEnabled];
         for (NSWindow* window in [workspaceWindowControllers valueForKey:@"window"]) {
-            DMMExterminatorButtonView* buttonView = [self exterminatorButtonContainerForWindow:window];
-            if (buttonView)
-                [buttonView setHidden:![self isButtonEnabled]];
+            [self registerToolbarButtonAndProviderForWindow:window];
+            if (shouldShowButton)
+                [self insertToolbarButtonForWindow:window];
+            else
+                [self removeToolbarButtonForWindow:window];
         }
     }
     @catch (NSException* exception) {}
@@ -111,58 +111,80 @@
 
 - (BOOL)validateMenuItem:(NSMenuItem*)menuItem
 {
-    if ([menuItem action] == @selector(toggleButtonInTitleBar:)) {
+    if ([menuItem action] == @selector(toggleButtonInToolbar:)) {
         [menuItem setState:[self isButtonEnabled] ? NSOnState : NSOffState];
     }
     return YES;
 }
 
-- (DMMExterminatorButtonView*)exterminatorButtonContainerForWindow:(NSWindow*)window
+- (void)registerToolbarButtonAndProviderForWindow:(NSWindow*)window
 {
-    if ([window isKindOfClass:NSClassFromString(@"IDEWorkspaceWindow")]) {
-        NSView* windowFrameView = [[window contentView] superview];
-        DMMExterminatorButtonView* container = [windowFrameView viewWithTag:EXTERMINATOR_BUTTON_CONTAINER_TAG];
-
-        if (!container) {
-            CGFloat containerWidth = EXTERMINATOR_MAX_CONTAINER_WIDTH;
-            container = [[DMMExterminatorButtonView alloc] initWithFrame:NSMakeRect(window.frame.size.width - containerWidth - EXTERMINATOR_BUTTON_OFFSET_FROM_R, windowFrameView.bounds.size.height - 22, containerWidth, 20)];
-            container.tag = EXTERMINATOR_BUTTON_CONTAINER_TAG;
-            container.autoresizingMask = NSViewMinXMargin | NSViewMinYMargin;
-
-            container.button.target = self;
-            container.button.action = @selector(clearDerivedDataForKeyWindow);
-
-            [container setHidden:![self isButtonEnabled]];
-            [windowFrameView addSubview:container];
-        }
-        return container;
+    NSObject<NSToolbarDelegate>* delegate = window.toolbar.delegate;
+    NSArray* allowedIdentifiers = [delegate allowedItemIdentifiers];
+    NSMutableDictionary* providers = [delegate toolbarItemProviders].mutableCopy;
+    if (![allowedIdentifiers containsObject:DMMDerivedDataExterminatorButtonIdentifier]) {
+        allowedIdentifiers = [allowedIdentifiers arrayByAddingObject:DMMDerivedDataExterminatorButtonIdentifier];
+        providers[DMMDerivedDataExterminatorButtonIdentifier] = self;
+        [delegate setValue:allowedIdentifiers forKey:@"_allowedItemIdentifiers"];
+        [delegate setValue:providers forKey:@"_toolbarItemProviders"];
     }
-    return nil;
 }
 
-- (void)windowDidEndLiveResize:(NSNotification*)notification
+- (void)insertToolbarButtonForWindow:(NSWindow*)window
 {
-    NSWindow* window = [notification object];
-    NSView* button = [self exterminatorButtonContainerForWindow:window].button;
-    if (button) {
-        double delayInSeconds = 0.0;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
-            [button setHidden:![self isButtonEnabled]];
-        });
+    for (NSToolbarItem* item in window.toolbar.items) {
+        if ([item.itemIdentifier isEqualToString:DMMDerivedDataExterminatorButtonIdentifier])
+            return;
     }
+    [window.toolbar insertItemWithItemIdentifier:@"Xcode.IDEKit.CustomToolbarItem.Separator"
+                                         atIndex:window.toolbar.items.count - 1];
+    [window.toolbar insertItemWithItemIdentifier:DMMDerivedDataExterminatorButtonIdentifier
+                                         atIndex:window.toolbar.items.count - 1];
+}
+
+- (void)removeToolbarButtonForWindow:(NSWindow*)window
+{
+    NSInteger index = NSNotFound;
+    for (int i = 0; i < window.toolbar.items.count; i++) {
+        NSToolbarItem* item = window.toolbar.items[i];
+        if ([item.itemIdentifier isEqualToString:DMMDerivedDataExterminatorButtonIdentifier]) {
+            index = i;
+            break;
+        }
+    }
+    if (index != NSNotFound) {
+        [window.toolbar removeItemAtIndex:index];
+        if (index > 0)
+            [window.toolbar removeItemAtIndex:index - 1];
+    }
+}
+
+- (id)toolbarItemForToolbarInWindow:(id)arg1
+{
+    Class DVTViewControllerToolbarItem = NSClassFromString(@"DVTViewControllerToolbarItem");
+    NSToolbarItem* exterminatorItem = (NSToolbarItem*)[[DVTViewControllerToolbarItem alloc] initWithItemIdentifier:DMMDerivedDataExterminatorButtonIdentifier];
+
+    exterminatorItem.target = self;
+    exterminatorItem.action = @selector(clearDerivedDataForKeyWindow);
+    exterminatorItem.toolTip = @"Clear DerivedData";
+    exterminatorItem.label = @"DerivedData";
+    exterminatorItem.maxSize = NSMakeSize(16, 16);
+    exterminatorItem.image = [[NSImage alloc] initByReferencingFile:[self.bundle pathForResource:@"icon" ofType:@"tiff"]];
+    exterminatorItem.image.template = YES;
+    [exterminatorItem setValue:[DMMButtonViewController new] forKey:@"viewController"];
+    return exterminatorItem;
 }
 
 #pragma mark Preferences
 
 - (BOOL)isButtonEnabled
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kDMMDerivedDataExterminatorShowButtonInTitleBar];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:DMMDerivedDataExterminatorShowButtonInTitleBar];
 }
 
 - (void)setButtonEnabled:(BOOL)enabled
 {
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kDMMDerivedDataExterminatorShowButtonInTitleBar];
+    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:DMMDerivedDataExterminatorShowButtonInTitleBar];
 }
 
 @end

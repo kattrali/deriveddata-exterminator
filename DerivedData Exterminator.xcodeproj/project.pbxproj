@@ -8,8 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		8A2423EB171A2248000B2AA3 /* DMMDerivedDataExterminator.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A2423E8171A2248000B2AA3 /* DMMDerivedDataExterminator.m */; };
-		8A2423EC171A2248000B2AA3 /* DMMExterminatorButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A2423EA171A2248000B2AA3 /* DMMExterminatorButtonView.m */; };
 		8A862F581731CA35009E0FAB /* DMMDerivedDataHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A862F571731CA35009E0FAB /* DMMDerivedDataHandler.m */; };
+		8AA43ECD19F7223D00AF8DEB /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AA43ECA19F7223D00AF8DEB /* icon.png */; };
+		8AA43ECE19F7223D00AF8DEB /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AA43ECB19F7223D00AF8DEB /* icon@2x.png */; };
+		8AA43ECF19F7223D00AF8DEB /* icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AA43ECC19F7223D00AF8DEB /* icon@3x.png */; };
+		8AC30E8619F71CF500A3B620 /* DMMButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AC30E8519F71CF500A3B620 /* DMMButtonViewController.m */; };
 		8AE15E23171A280000767645 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A2423D8171A221E000B2AA3 /* AppKit.framework */; };
 		8AE15E24171A281F00767645 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A2423DA171A221E000B2AA3 /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -21,10 +24,13 @@
 		8A2423DD171A221E000B2AA3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8A2423E7171A2248000B2AA3 /* DMMDerivedDataExterminator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMMDerivedDataExterminator.h; sourceTree = "<group>"; };
 		8A2423E8171A2248000B2AA3 /* DMMDerivedDataExterminator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMMDerivedDataExterminator.m; sourceTree = "<group>"; };
-		8A2423E9171A2248000B2AA3 /* DMMExterminatorButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMMExterminatorButtonView.h; sourceTree = "<group>"; };
-		8A2423EA171A2248000B2AA3 /* DMMExterminatorButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMMExterminatorButtonView.m; sourceTree = "<group>"; };
 		8A862F561731CA35009E0FAB /* DMMDerivedDataHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMMDerivedDataHandler.h; sourceTree = "<group>"; };
 		8A862F571731CA35009E0FAB /* DMMDerivedDataHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMMDerivedDataHandler.m; sourceTree = "<group>"; };
+		8AA43ECA19F7223D00AF8DEB /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		8AA43ECB19F7223D00AF8DEB /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		8AA43ECC19F7223D00AF8DEB /* icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@3x.png"; sourceTree = "<group>"; };
+		8AC30E8419F71CF500A3B620 /* DMMButtonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMMButtonViewController.h; sourceTree = "<group>"; };
+		8AC30E8519F71CF500A3B620 /* DMMButtonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMMButtonViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,10 +75,11 @@
 		8A2423DB171A221E000B2AA3 /* DerivedData Exterminator */ = {
 			isa = PBXGroup;
 			children = (
+				8AA43EC919F7222B00AF8DEB /* Assets */,
+				8AC30E8419F71CF500A3B620 /* DMMButtonViewController.h */,
+				8AC30E8519F71CF500A3B620 /* DMMButtonViewController.m */,
 				8A2423E7171A2248000B2AA3 /* DMMDerivedDataExterminator.h */,
 				8A2423E8171A2248000B2AA3 /* DMMDerivedDataExterminator.m */,
-				8A2423E9171A2248000B2AA3 /* DMMExterminatorButtonView.h */,
-				8A2423EA171A2248000B2AA3 /* DMMExterminatorButtonView.m */,
 				8A862F561731CA35009E0FAB /* DMMDerivedDataHandler.h */,
 				8A862F571731CA35009E0FAB /* DMMDerivedDataHandler.m */,
 				8A2423DC171A221E000B2AA3 /* Supporting Files */,
@@ -86,6 +93,16 @@
 				8A2423DD171A221E000B2AA3 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8AA43EC919F7222B00AF8DEB /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				8AA43ECA19F7223D00AF8DEB /* icon.png */,
+				8AA43ECB19F7223D00AF8DEB /* icon@2x.png */,
+				8AA43ECC19F7223D00AF8DEB /* icon@3x.png */,
+			);
+			name = Assets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -139,6 +156,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8AA43ECD19F7223D00AF8DEB /* icon.png in Resources */,
+				8AA43ECE19F7223D00AF8DEB /* icon@2x.png in Resources */,
+				8AA43ECF19F7223D00AF8DEB /* icon@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,7 +170,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8A2423EB171A2248000B2AA3 /* DMMDerivedDataExterminator.m in Sources */,
-				8A2423EC171A2248000B2AA3 /* DMMExterminatorButtonView.m in Sources */,
+				8AC30E8619F71CF500A3B620 /* DMMButtonViewController.m in Sources */,
 				8A862F581731CA35009E0FAB /* DMMDerivedDataHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
