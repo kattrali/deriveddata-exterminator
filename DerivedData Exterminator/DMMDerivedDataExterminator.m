@@ -1,22 +1,17 @@
-//
-//  DMMDerivedDataExterminator.m
-//  DerivedDataExterminator
-//
-//  Created by Delisa Mason on 4/13/13.
-//  Copyright (c) 2013 Delisa Mason.
-//
 
 #import "DMMDerivedDataExterminator.h"
 #import "DMMDerivedDataHandler.h"
 #import "DMMButtonViewController.h"
 
-@interface NSObject (IDEKit)
+@interface NSObject (IDEWorkspaceWindowController)
 + (id)workspaceWindowControllers;
+@end
+
+@interface NSObject (DVTViewControllerToolbarItem)
 + (instancetype)alloc;
 - (id)initWithItemIdentifier:(NSString*)identifier;
 - (NSArray*)allowedItemIdentifiers;
 - (NSDictionary*)toolbarItemProviders;
-- (id)derivedDataLocation;
 @end
 
 @interface DMMDerivedDataExterminator ()
