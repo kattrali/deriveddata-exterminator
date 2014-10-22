@@ -26,6 +26,14 @@
     }
 }
 
++ (void) clearModuleCache
+{
+    NSString* path = [[self derivedDataLocation] stringByAppendingPathComponent:@"ModuleCache"];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        [self removeDirectoryAtPath:path];
+    }
+}
+
 #pragma mark - Private
 
 + (NSString*)derivedDataLocation
