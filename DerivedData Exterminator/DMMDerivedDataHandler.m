@@ -28,11 +28,9 @@
 
 + (void) clearModuleCache
 {
-    for (NSString *subdirectory in [self derivedDataSubdirectoryPaths]) {
-        if ([[[subdirectory pathComponents] lastObject] isEqualToString:@"ModuleCache"]) {
-            [self removeDirectoryAtPath:subdirectory];
-            break;
-        }
+    NSString* path = [[self derivedDataLocation] stringByAppendingPathComponent:@"ModuleCache"];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        [self removeDirectoryAtPath:path];
     }
 }
 
