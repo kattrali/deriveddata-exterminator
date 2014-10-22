@@ -1,4 +1,5 @@
-# EXTERMINATE!
+
+![Exterminator](https://github.com/kattrali/deriveddata-exterminator/raw/master/docs/banner@2x.png)
 
 Sometimes Xcode needs a friendly helping hand with cleaning out the Derived Data for a project. The Exterminator makes this quick and easy.
 
@@ -21,19 +22,15 @@ Sometimes Xcode needs a friendly helping hand with cleaning out the Derived Data
 
 ![Exterminator Button](https://github.com/kattrali/deriveddata-exterminator/raw/master/docs/exterminator.png)
 
-### Or This, if you hide the toolbar: 
-
-![Exterminator Button](https://github.com/kattrali/deriveddata-exterminator/raw/master/docs/exterminator+minixcode.png)
-
 ## Installation
 
-- Install via [Alcatraz](https://github.com/mneorr/Alcatraz)
+- Install via [Alcatraz](https://github.com/supermarin/Alcatraz)
 
 OR
 
 - Clone and build the project. The plugin will be installed into `~/Library/Application Support/Developer/Shared/Xcode/Plug-ins`. (To uninstall the plugin, delete the `DerivedData-Exterminator` directory from there)
 - Restart Xcode
-- Select `Derived Data Exterminator in Title Bar` in the `View` menu
+- Select `Derived Data Exterminator in Toolbar` in the `View` menu
 
 Note: The default (`master`) branch builds for Xcode 5+. To build the project for Xcode4, check out the `xcode4` branch before building the project.
 

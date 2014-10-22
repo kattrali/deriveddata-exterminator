@@ -11,17 +11,17 @@
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>47F511AC5DB281E967CB5C1DCEDDF0D944B5CCC6</key>
-		<string>ssh://github.com/kreeger/deriveddata-exterminator.git</string>
+		<string>github.com:kattrali/deriveddata-exterminator.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>DerivedData Exterminator.xcodeproj/project.xcworkspace</string>
+	<string>DerivedData Exterminator.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>47F511AC5DB281E967CB5C1DCEDDF0D944B5CCC6</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://github.com/kreeger/deriveddata-exterminator.git</string>
+	<string>github.com:kattrali/deriveddata-exterminator.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
