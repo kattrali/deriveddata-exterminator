@@ -145,10 +145,9 @@ static NSString* const DMMDerivedDataExterminatorShowButtonInTitleBar = @"DMMDer
         if ([item.itemIdentifier isEqualToString:DMMDerivedDataExterminatorButtonIdentifier])
             return;
     }
-    [window.toolbar insertItemWithItemIdentifier:@"Xcode.IDEKit.CustomToolbarItem.Separator"
-                                         atIndex:window.toolbar.items.count - 1];
+    NSInteger index = MAX(0, window.toolbar.items.count - 1);
     [window.toolbar insertItemWithItemIdentifier:DMMDerivedDataExterminatorButtonIdentifier
-                                         atIndex:window.toolbar.items.count - 1];
+                                         atIndex:index];
 }
 
 - (void)removeToolbarButtonForWindow:(NSWindow*)window
@@ -163,8 +162,6 @@ static NSString* const DMMDerivedDataExterminatorShowButtonInTitleBar = @"DMMDer
     }
     if (index != NSNotFound) {
         [window.toolbar removeItemAtIndex:index];
-        if (index > 0)
-            [window.toolbar removeItemAtIndex:index - 1];
     }
 }
 
