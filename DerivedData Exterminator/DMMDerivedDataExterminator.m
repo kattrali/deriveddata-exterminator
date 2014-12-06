@@ -24,6 +24,8 @@
 
 static NSString* const DMMDerivedDataExterminatorButtonIdentifier = @"me.delisa.DMMDerivedDataExterminator";
 static NSString* const DMMDerivedDataExterminatorShowButtonInTitleBar = @"DMMDerivedDataExterminatorShowButtonInTitleBar";
+static NSInteger const DMMToolbarRoundedMajorVersion = 10;
+static NSInteger const DMMToolbarRoundedMinorVersion = 10;
 
 + (void)pluginDidLoad:(NSBundle*)plugin
 {
@@ -169,16 +171,34 @@ static NSString* const DMMDerivedDataExterminatorShowButtonInTitleBar = @"DMMDer
 {
     Class DVTViewControllerToolbarItem = NSClassFromString(@"DVTViewControllerToolbarItem");
     NSToolbarItem* exterminatorItem = (NSToolbarItem*)[[DVTViewControllerToolbarItem alloc] initWithItemIdentifier:DMMDerivedDataExterminatorButtonIdentifier];
+    NSImage* image = [[NSImage alloc] initByReferencingFile:[self.bundle pathForResource:@"icon" ofType:@"tiff"]];
+    image.template = YES;
 
     exterminatorItem.target = self;
-    exterminatorItem.action = @selector(clearDerivedDataForKeyWindow);
     exterminatorItem.toolTip = @"Clear DerivedData";
     exterminatorItem.label = @"DerivedData";
-    exterminatorItem.maxSize = NSMakeSize(16, 16);
-    exterminatorItem.image = [[NSImage alloc] initByReferencingFile:[self.bundle pathForResource:@"icon" ofType:@"tiff"]];
-    exterminatorItem.image.template = YES;
+    exterminatorItem.maxSize = NSMakeSize(32, 32);
+
+    if ([self shouldUseRoundedToolbarButtonStyle]) {
+        NSButton* button = [[NSButton alloc] init];
+        button.image = image;
+        button.action = @selector(clearDerivedDataForKeyWindow);
+        button.target = self;
+        button.bezelStyle = NSTexturedRoundedBezelStyle;
+        exterminatorItem.view = button;
+    } else {
+        exterminatorItem.action = @selector(clearDerivedDataForKeyWindow);
+        exterminatorItem.image = image;
+    }
+
     [exterminatorItem setValue:[DMMButtonViewController new] forKey:@"viewController"];
     return exterminatorItem;
+}
+
+- (BOOL)shouldUseRoundedToolbarButtonStyle {
+    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
+    return version.majorVersion >= DMMToolbarRoundedMajorVersion
+        && version.minorVersion >= DMMToolbarRoundedMinorVersion;
 }
 
 #pragma mark Preferences
