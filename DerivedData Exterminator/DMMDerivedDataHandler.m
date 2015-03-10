@@ -10,8 +10,8 @@
 
 + (void)clearDerivedDataForProject:(NSString*)projectName
 {
-    NSString* projectPrefix = [projectName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
-
+    NSString* strippedName = [projectName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
+    NSString* projectPrefix = [NSString stringWithFormat:@"%@-", strippedName];
     for (NSString* subdirectory in [self derivedDataSubdirectoryPaths]) {
         if ([[[subdirectory pathComponents] lastObject] hasPrefix:projectPrefix]) {
             [self removeDirectoryAtPath:subdirectory];
