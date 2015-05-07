@@ -41,9 +41,15 @@ static NSInteger const DMMToolbarRoundedMinorVersion = 10;
 {
     if (self = [super init]) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateToolbarsFromPreferences) name:NSWindowDidBecomeKeyNotification object:nil];
-        [self createMenuItems];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidFinishLaunching:) name:NSApplicationDidFinishLaunchingNotification object:nil];
     }
     return self;
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)notification
+{
+    [self createMenuItems];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationDidFinishLaunchingNotification object:nil];
 }
 
 - (void)createMenuItems
