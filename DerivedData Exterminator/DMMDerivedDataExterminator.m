@@ -197,7 +197,7 @@ static NSInteger const DMMToolbarRoundedMinorVersion = 10;
         exterminatorItem.image = image;
     }
 
-    [exterminatorItem setValue:[DMMButtonViewController new] forKey:@"viewController"];
+    [exterminatorItem setValue:[[DMMButtonViewController alloc] initWithNibName:nil bundle:nil] forKey:@"viewController"];
     return exterminatorItem;
 }
 
