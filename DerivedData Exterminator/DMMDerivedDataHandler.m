@@ -10,28 +10,34 @@
 
 + (void)clearDerivedDataForProject:(NSString*)projectName
 {
-    NSString* strippedName = [projectName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
-    NSString* projectPrefix = [NSString stringWithFormat:@"%@-", strippedName];
-    for (NSString* subdirectory in [self derivedDataSubdirectoryPaths]) {
-        if ([[[subdirectory pathComponents] lastObject] hasPrefix:projectPrefix]) {
-            [self removeDirectoryAtPath:subdirectory];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString* strippedName = [projectName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
+        NSString* projectPrefix = [NSString stringWithFormat:@"%@-", strippedName];
+        for (NSString* subdirectory in [self derivedDataSubdirectoryPaths]) {
+            if ([[[subdirectory pathComponents] lastObject] hasPrefix:projectPrefix]) {
+                [self removeDirectoryAtPath:subdirectory];
+            }
         }
-    }
+    });
 }
 
 + (void)clearAllDerivedData
 {
-    for (NSString* subdirectory in [self derivedDataSubdirectoryPaths]) {
-        [self removeDirectoryAtPath:subdirectory];
-    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        for (NSString* subdirectory in [self derivedDataSubdirectoryPaths]) {
+            [self removeDirectoryAtPath:subdirectory];
+        }
+    });
 }
 
 + (void) clearModuleCache
 {
-    NSString* path = [[self derivedDataLocation] stringByAppendingPathComponent:@"ModuleCache"];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
-        [self removeDirectoryAtPath:path];
-    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString* path = [[self derivedDataLocation] stringByAppendingPathComponent:@"ModuleCache"];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+            [self removeDirectoryAtPath:path];
+        }
+    });
 }
 
 #pragma mark - Private
