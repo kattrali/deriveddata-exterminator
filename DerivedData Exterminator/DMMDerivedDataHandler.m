@@ -13,20 +13,20 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString* strippedName = [projectName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
         NSString* projectPrefix = [NSString stringWithFormat:@"%@-", strippedName];
+        NSMutableArray* paths = [NSMutableArray new];
         for (NSString* subdirectory in [self derivedDataSubdirectoryPaths]) {
             if ([[[subdirectory pathComponents] lastObject] hasPrefix:projectPrefix]) {
-                [self removeDirectoryAtPath:subdirectory];
+                [paths addObject:subdirectory];
             }
         }
+        [self removeDirectoriesAtPaths:paths];
     });
 }
 
 + (void)clearAllDerivedData
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        for (NSString* subdirectory in [self derivedDataSubdirectoryPaths]) {
-            [self removeDirectoryAtPath:subdirectory];
-        }
+        [self removeDirectoriesAtPaths:[self derivedDataSubdirectoryPaths]];
     });
 }
 
@@ -35,8 +35,17 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString* path = [[self derivedDataLocation] stringByAppendingPathComponent:@"ModuleCache"];
         if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
-            [self removeDirectoryAtPath:path];
+            [self removeDirectoriesAtPaths:@[path]];
         }
+    });
+}
+
++ (void)showNotificationWithMessage:(NSString*)message {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSUserNotification *notification = [NSUserNotification new];
+        notification.title = @"DerivedData Exterminator";
+        notification.informativeText = message;
+        [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
     });
 }
 
@@ -74,9 +83,17 @@
     return workspaceDirectories;
 }
 
-+ (void)removeDirectoryAtPath:(NSString*)path
++ (void)removeDirectoriesAtPaths:(NSArray*)paths {
+    BOOL success = YES;
+    for (NSString* path in paths) {
+        success = success && [self removeDirectoryAtPath:path];
+    }
+    if (success)
+        [self showNotificationWithMessage:@"Cleared derived data"];
+}
+
++ (BOOL)removeDirectoryAtPath:(NSString*)path
 {
-    NSLog(@"DD-E: Clearing Derived Data at Path: %@", path);
     NSError* error = nil;
     [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
     if (error) {
@@ -87,17 +104,16 @@
         // Retry once
         [[NSFileManager defaultManager] removeItemAtPath:path error:&error];
     }
-
-    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
-        [self showErrorAlert:[NSError errorWithDomain:[NSString stringWithFormat:@"DerivedData Exterminator - removing directory failed after multiple attempts: %@", path] code:668 userInfo:nil] forPath:path];
-    }
+    return ![[NSFileManager defaultManager] fileExistsAtPath:path];
 }
 
 + (void)showErrorAlert:(NSError*)error forPath:(NSString*)path
 {
-    NSAlert* alert = [NSAlert new];
-    alert.messageText = [NSString stringWithFormat:@"An error occurred while removing %@:\n\n %@", path, [error localizedDescription]];
-    [alert runModal];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSAlert* alert = [NSAlert new];
+        alert.messageText = [NSString stringWithFormat:@"An error occurred while removing %@:\n\n %@", path, [error localizedDescription]];
+        [alert runModal];
+    });
 }
 
 @end
