@@ -1,6 +1,8 @@
 
 ![Exterminator](https://github.com/kattrali/deriveddata-exterminator/raw/master/docs/banner@2x.png)
 
+**Note:** Plugin is for Xcode of versions prior to 8.
+
 Sometimes Xcode needs a friendly helping hand with cleaning out the Derived Data for a project. The Exterminator makes this quick and easy.
 
 ### Replace This:
